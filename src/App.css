@@ -29,16 +29,28 @@
   border-bottom: 1px solid black;
 }
 
+.square__input {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .square__input--filled {
   color: black;
+  font-weight: 900;
 }
 
 .square__input--unfilled {
-  color: darkgray;
-  height: 100%;
-  width: 100%;
+  color: black;
+  font-style: italic;
 }
 
 .square--highighted {
   background-color: lightgray;
+}
+
+.square--selected {
+  background-color: lightblue;
 }

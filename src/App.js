@@ -58,14 +58,26 @@ function App() {
   const [selectedSquare, setSelectedSquare] = React.useState();
 
   const handleNumberSelect = (number) => {
-    console.log(number);
+    if (!selectedSquare) return;
+    if (selectedSquare.filled) return;
+
+    const newGrid = data.slice();
+    const { x: selectedRowIndex, y: selectedColumnIndex } = selectedSquare;
+    const selectedRow = newGrid[selectedRowIndex].slice();
+
+    selectedRow[selectedColumnIndex] = {
+      ...selectedRow[selectedColumnIndex],
+      value: number,
+    };
+
+    newGrid[selectedRowIndex] = selectedRow;
+
+    setData(newGrid);
   };
 
-  const handleEmptyCellClick = ({ x, y }) => () => {
-    setSelectedSquare({ x, y });
+  const handleEmptyCellClick = ({ x, y, filled }) => () => {
+    setSelectedSquare({ x, y, filled });
   };
-
-  console.log(selectedSquare);
 
   return (
     <div className="container">
@@ -80,21 +92,23 @@ function App() {
 
               const squareClass = classNames("square", {
                 "square--highighted": isHighlighted,
+                "square--selected":
+                  x === selectedSquare.x && y === selectedSquare.y,
               });
 
               return (
                 <div className={squareClass} key={cellIndex}>
                   {filled ? (
                     <div
-                      className="square__input--filled"
-                      onClick={handleEmptyCellClick({ x, y })}
+                      className="square__input square__input--filled"
+                      onClick={handleEmptyCellClick({ x, y, filled })}
                     >
                       {value}
                     </div>
                   ) : (
                     <div
-                      className="square__input--unfilled"
-                      onClick={handleEmptyCellClick({ x, y })}
+                      className="square__input square__input--unfilled"
+                      onClick={handleEmptyCellClick({ x, y, filled })}
                     >
                       {value || " "}
                     </div>

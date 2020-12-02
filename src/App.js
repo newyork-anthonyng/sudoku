@@ -17,17 +17,42 @@ function NumberPicker(props) {
     props.onSelect(number);
   };
 
+  const containerClass = classNames("number-picker", {
+    "number-picker--disabled": props.disabled,
+  });
+  const buttonClass = classNames("number-picker__button", {
+    "number-picker__button--disabled": props.disabled,
+  });
+
   return (
-    <div>
-      <button onClick={handleClick(1)}>1</button>
-      <button onClick={handleClick(2)}>2</button>
-      <button onClick={handleClick(3)}>3</button>
-      <button onClick={handleClick(4)}>4</button>
-      <button onClick={handleClick(5)}>5</button>
-      <button onClick={handleClick(6)}>6</button>
-      <button onClick={handleClick(7)}>7</button>
-      <button onClick={handleClick(8)}>8</button>
-      <button onClick={handleClick(9)}>9</button>
+    <div class={containerClass}>
+      <button class={buttonClass} onClick={handleClick(1)}>
+        1
+      </button>
+      <button class={buttonClass} onClick={handleClick(2)}>
+        2
+      </button>
+      <button class={buttonClass} onClick={handleClick(3)}>
+        3
+      </button>
+      <button class={buttonClass} onClick={handleClick(4)}>
+        4
+      </button>
+      <button class={buttonClass} onClick={handleClick(5)}>
+        5
+      </button>
+      <button class={buttonClass} onClick={handleClick(6)}>
+        6
+      </button>
+      <button class={buttonClass} onClick={handleClick(7)}>
+        7
+      </button>
+      <button class={buttonClass} onClick={handleClick(8)}>
+        8
+      </button>
+      <button class={buttonClass} onClick={handleClick(9)}>
+        9
+      </button>
     </div>
   );
 }
@@ -93,7 +118,9 @@ function App() {
               const squareClass = classNames("square", {
                 "square--highighted": isHighlighted,
                 "square--selected":
-                  x === selectedSquare.x && y === selectedSquare.y,
+                  selectedSquare &&
+                  x === selectedSquare.x &&
+                  y === selectedSquare.y,
               });
 
               return (
@@ -119,7 +146,12 @@ function App() {
           </div>
         );
       })}
-      <NumberPicker onSelect={handleNumberSelect} />
+      <NumberPicker
+        onSelect={handleNumberSelect}
+        disabled={
+          typeof selectedSquare === "undefined" || selectedSquare.filled
+        }
+      />
     </div>
   );
 }

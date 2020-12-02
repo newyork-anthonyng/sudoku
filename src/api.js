@@ -1,0 +1,27 @@
+const response = {
+  response: true,
+  size: "9",
+  squares: [
+    { x: 0, y: 4, value: 5 },
+    { x: 1, y: 7, value: 6 },
+    { x: 1, y: 8, value: 8 },
+    { x: 2, y: 1, value: 1 },
+    { x: 2, y: 6, value: 7 },
+    { x: 3, y: 3, value: 6 },
+    { x: 4, y: 2, value: 6 },
+    { x: 4, y: 4, value: 2 },
+    { x: 4, y: 6, value: 9 },
+    { x: 5, y: 1, value: 3 },
+    { x: 5, y: 2, value: 2 },
+    { x: 5, y: 3, value: 5 },
+    { x: 6, y: 0, value: 6 },
+    { x: 6, y: 6, value: 2 },
+    { x: 6, y: 8, value: 9 },
+    { x: 7, y: 1, value: 2 },
+    { x: 7, y: 5, value: 7 },
+    { x: 8, y: 0, value: 5 },
+    { x: 8, y: 4, value: 3 },
+    { x: 8, y: 5, value: 1 },
+  ],
+};
+export default response;

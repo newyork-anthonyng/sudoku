@@ -14,6 +14,7 @@
   align-items: center;
   border-top: 1px solid black;
   border-left: 1px solid black;
+  cursor: pointer;
 }
 
 .square:nth-of-type(3n) {
@@ -28,10 +29,16 @@
   border-bottom: 1px solid black;
 }
 
-.square__input {
-  width: 100%;
-  font-size: 18px;
-  appearance: none;
-  border: none;
+.square__input--filled {
+  color: black;
+}
+
+.square__input--unfilled {
   color: darkgray;
+  height: 100%;
+  width: 100%;
+}
+
+.square--highighted {
+  background-color: lightgray;
 }

@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/states-game-demo/static/css/main.21dcb12d.chunk.css",
+    "main.js": "/states-game-demo/static/js/main.eca2e8e7.chunk.js",
+    "main.js.map": "/states-game-demo/static/js/main.eca2e8e7.chunk.js.map",
+    "runtime-main.js": "/states-game-demo/static/js/runtime-main.e17db813.js",
+    "runtime-main.js.map": "/states-game-demo/static/js/runtime-main.e17db813.js.map",
+    "static/js/2.7d71218a.chunk.js": "/states-game-demo/static/js/2.7d71218a.chunk.js",
+    "static/js/2.7d71218a.chunk.js.map": "/states-game-demo/static/js/2.7d71218a.chunk.js.map",
+    "static/js/3.1b4d0245.chunk.js": "/states-game-demo/static/js/3.1b4d0245.chunk.js",
+    "static/js/3.1b4d0245.chunk.js.map": "/states-game-demo/static/js/3.1b4d0245.chunk.js.map",
+    "index.html": "/states-game-demo/index.html",
+    "static/css/main.21dcb12d.chunk.css.map": "/states-game-demo/static/css/main.21dcb12d.chunk.css.map",
+    "static/js/2.7d71218a.chunk.js.LICENSE.txt": "/states-game-demo/static/js/2.7d71218a.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.e17db813.js",
+    "static/js/2.7d71218a.chunk.js",
+    "static/css/main.21dcb12d.chunk.css",
+    "static/js/main.eca2e8e7.chunk.js"
+  ]
+}

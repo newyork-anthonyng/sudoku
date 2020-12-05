@@ -2,6 +2,7 @@ import React from "react";
 import apiData from "./api";
 import "./App.css";
 import classNames from "classnames";
+import { io } from "socket.io-client";
 
 const emptyGrid = new Array(9);
 for (let i = 0; i < emptyGrid.length; i++) {
@@ -25,32 +26,32 @@ function NumberPicker(props) {
   });
 
   return (
-    <div class={containerClass}>
-      <button class={buttonClass} onClick={handleClick(1)}>
+    <div className={containerClass}>
+      <button className={buttonClass} onClick={handleClick(1)}>
         1
       </button>
-      <button class={buttonClass} onClick={handleClick(2)}>
+      <button className={buttonClass} onClick={handleClick(2)}>
         2
       </button>
-      <button class={buttonClass} onClick={handleClick(3)}>
+      <button className={buttonClass} onClick={handleClick(3)}>
         3
       </button>
-      <button class={buttonClass} onClick={handleClick(4)}>
+      <button className={buttonClass} onClick={handleClick(4)}>
         4
       </button>
-      <button class={buttonClass} onClick={handleClick(5)}>
+      <button className={buttonClass} onClick={handleClick(5)}>
         5
       </button>
-      <button class={buttonClass} onClick={handleClick(6)}>
+      <button className={buttonClass} onClick={handleClick(6)}>
         6
       </button>
-      <button class={buttonClass} onClick={handleClick(7)}>
+      <button className={buttonClass} onClick={handleClick(7)}>
         7
       </button>
-      <button class={buttonClass} onClick={handleClick(8)}>
+      <button className={buttonClass} onClick={handleClick(8)}>
         8
       </button>
-      <button class={buttonClass} onClick={handleClick(9)}>
+      <button className={buttonClass} onClick={handleClick(9)}>
         9
       </button>
     </div>
@@ -67,6 +68,12 @@ function isSquareHighlighted(
 }
 
 function App() {
+  const socket = React.useRef();
+
+  React.useEffect(() => {
+    socket.current = io("ws://localhost:3001");
+  }, []);
+
   const [data, setData] = React.useState(() => {
     apiData.squares.forEach((square) => {
       const { x, y, value } = square;
@@ -88,6 +95,12 @@ function App() {
 
     const newGrid = data.slice();
     const { x: selectedRowIndex, y: selectedColumnIndex } = selectedSquare;
+
+    socket.current.emit(
+      "number_select",
+      JSON.stringify({ ...selectedSquare, value: number })
+    );
+
     const selectedRow = newGrid[selectedRowIndex].slice();
 
     selectedRow[selectedColumnIndex] = {

@@ -143,7 +143,18 @@ function Sudoku() {
 
     setData(newGrid);
     gridRef.current = newGrid;
+    updateBackend(gameId, newSquare);
+  };
 
+  const handleDeleteSelect = () => {
+    const newSquare = {
+      ...selectedSquare,
+      value: 0,
+    };
+    const newGrid = createNewGrid(grid, newSquare);
+
+    setData(newGrid);
+    gridRef.current = newGrid;
     updateBackend(gameId, newSquare);
   };
 
@@ -214,6 +225,16 @@ function Sudoku() {
             </div>
           );
         })}
+        <div>
+          <button
+            onClick={handleDeleteSelect}
+            disabled={
+              typeof selectedSquare === "undefined" || selectedSquare.filled
+            }
+          >
+            Delete
+          </button>
+        </div>
         <NumberPicker
           onSelect={handleNumberSelect}
           disabled={

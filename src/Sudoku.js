@@ -11,14 +11,15 @@ function fetchGame(gameId) {
     .then((res) => res.grid);
 }
 
-const emptyGrid = new Array(9);
-
-for (let i = 0; i < emptyGrid.length; i++) {
-  emptyGrid[i] = new Array(9);
-
-  for (let j = 0; j < emptyGrid[i].length; j++) {
-    emptyGrid[i][j] = { filled: false, value: undefined, x: i, y: j };
-  }
+function updateBackend(gameId, selectedSquare) {
+  const GAME_URL = `http://localhost:3001/games/${gameId}`;
+  return fetch(GAME_URL, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(selectedSquare),
+  }).then((a) => a.json());
 }
 
 function NumberPicker(props) {
@@ -77,15 +78,35 @@ function isSquareHighlighted(
 
 function Sudoku() {
   const { gameId } = useParams();
+  const gridRef = React.useRef([]);
+
+  function createNewGrid(originalGrid, move) {
+    const newGrid = originalGrid.slice();
+    const { x: selectedRowIndex, y: selectedColumnIndex, value } = move;
+
+    const selectedRow = newGrid[selectedRowIndex].slice();
+
+    const newSquare = {
+      ...selectedRow[selectedColumnIndex],
+      value,
+    };
+    selectedRow[selectedColumnIndex] = newSquare;
+
+    newGrid[selectedRowIndex] = selectedRow;
+
+    return newGrid;
+  }
 
   const socket = React.useRef();
   React.useEffect(() => {
     socket.current = io("ws://localhost:3001");
+
+    socket.current.on("new_message", handleSocketMessages);
   }, []);
 
   const [selectedSquare, setSelectedSquare] = React.useState();
   const {
-    data,
+    data: grid,
     error,
     isError,
     isIdle,
@@ -94,35 +115,36 @@ function Sudoku() {
     run,
     setData,
   } = useAsync({
-    data: [],
+    data: [{}],
   });
 
+  const handleSocketMessages = (move) => {
+    const newGrid = createNewGrid(gridRef.current, move);
+
+    setData(newGrid);
+    gridRef.current = newGrid;
+  };
+
   React.useEffect(() => {
-    run(fetchGame(gameId));
+    run(fetchGame(gameId)).then((response) => {
+      gridRef.current = response;
+    });
   }, []);
 
   const handleNumberSelect = (number) => {
     if (!selectedSquare) return;
     if (selectedSquare.filled) return;
 
-    const newGrid = data.slice();
-    const { x: selectedRowIndex, y: selectedColumnIndex } = selectedSquare;
-
-    socket.current.emit(
-      "number_select",
-      JSON.stringify({ ...selectedSquare, value: number })
-    );
-
-    const selectedRow = newGrid[selectedRowIndex].slice();
-
-    selectedRow[selectedColumnIndex] = {
-      ...selectedRow[selectedColumnIndex],
+    const newSquare = {
+      ...selectedSquare,
       value: number,
     };
-
-    newGrid[selectedRowIndex] = selectedRow;
+    const newGrid = createNewGrid(grid, newSquare);
 
     setData(newGrid);
+    gridRef.current = newGrid;
+
+    updateBackend(gameId, newSquare);
   };
 
   const handleEmptyCellClick = ({ x, y, filled }) => () => {
@@ -144,7 +166,7 @@ function Sudoku() {
   if (isSuccess) {
     return (
       <div className="container">
-        {data.map((row, rowIndex) => {
+        {grid.map((row, rowIndex) => {
           return (
             <div className="row" key={rowIndex}>
               {row.map(({ value, filled, x, y }, cellIndex) => {
@@ -161,6 +183,14 @@ function Sudoku() {
                     y === selectedSquare.y,
                 });
 
+                const squareInputClass = classNames(
+                  "square__input",
+                  "square__input--unfilled",
+                  {
+                    "square__input--filled-by-user": value !== 0,
+                  }
+                );
+
                 return (
                   <div className={squareClass} key={cellIndex}>
                     {filled ? (
@@ -172,7 +202,7 @@ function Sudoku() {
                       </div>
                     ) : (
                       <div
-                        className="square__input square__input--unfilled"
+                        className={squareInputClass}
                         onClick={handleEmptyCellClick({ x, y, filled })}
                       >
                         {value || " "}

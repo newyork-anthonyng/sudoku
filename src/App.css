@@ -70,3 +70,23 @@
 .number-picker__button--disabled {
   cursor: not-allowed;
 }
+
+.square__input--filled-by-user {
+  animation: 2s filledByUser;
+}
+
+@keyframes filledByUser {
+  0% {
+    color: blueviolet;
+    transform: scale(2);
+  }
+
+  80% {
+    color: blueviolet;
+    transform: scale(1.7);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}

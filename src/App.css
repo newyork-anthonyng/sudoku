@@ -71,11 +71,10 @@ html, body, #root, .container {
 
 .number-picker {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 .number-picker__button {
-  font-size: 24px;
   background-color: transparent;
   border: 0;
   cursor: pointer;

@@ -5,14 +5,14 @@ import { useParams } from "react-router-dom";
 import useAsync from "./useAsyncHook";
 
 function fetchGame(gameId) {
-  const GAME_URL = `http://localhost:3001/games/${gameId}`;
+  const GAME_URL = `${process.env.REACT_APP_API_URL}/games/${gameId}`;
   return fetch(GAME_URL)
     .then((res) => res.json())
     .then((res) => res.grid);
 }
 
 function updateBackend(gameId, selectedSquare) {
-  const GAME_URL = `http://localhost:3001/games/${gameId}`;
+  const GAME_URL = `${process.env.REACT_APP_API_URL}/games/${gameId}`;
   return fetch(GAME_URL, {
     method: "PUT",
     headers: {
@@ -99,7 +99,7 @@ function Sudoku() {
 
   const socket = React.useRef();
   React.useEffect(() => {
-    socket.current = io("ws://localhost:3001");
+    socket.current = io(process.env.REACT_APP_WEB_SOCKET_URL);
 
     socket.current.on("new_message", handleSocketMessages);
   }, []);
@@ -177,54 +177,56 @@ function Sudoku() {
   if (isSuccess) {
     return (
       <div className="container">
-        {grid.map((row, rowIndex) => {
-          return (
-            <div className="row" key={rowIndex}>
-              {row.map(({ value, filled, x, y }, cellIndex) => {
-                const isHighlighted = isSquareHighlighted(selectedSquare, {
-                  x,
-                  y,
-                });
+        <div className="grid">
+          {grid.map((row, rowIndex) => {
+            return (
+              <div className="row" key={rowIndex}>
+                {row.map(({ value, filled, x, y }, cellIndex) => {
+                  const isHighlighted = isSquareHighlighted(selectedSquare, {
+                    x,
+                    y,
+                  });
 
-                const squareClass = classNames("square", {
-                  "square--highighted": isHighlighted,
-                  "square--selected":
-                    selectedSquare &&
-                    x === selectedSquare.x &&
-                    y === selectedSquare.y,
-                });
+                  const squareClass = classNames("square", {
+                    "square--highighted": isHighlighted,
+                    "square--selected":
+                      selectedSquare &&
+                      x === selectedSquare.x &&
+                      y === selectedSquare.y,
+                  });
 
-                const squareInputClass = classNames(
-                  "square__input",
-                  "square__input--unfilled",
-                  {
-                    "square__input--filled-by-user": value !== 0,
-                  }
-                );
+                  const squareInputClass = classNames(
+                    "square__input",
+                    "square__input--unfilled",
+                    {
+                      "square__input--filled-by-user": value !== 0,
+                    }
+                  );
 
-                return (
-                  <div className={squareClass} key={cellIndex}>
-                    {filled ? (
-                      <div
-                        className="square__input square__input--filled"
-                        onClick={handleEmptyCellClick({ x, y, filled })}
-                      >
-                        {value}
-                      </div>
-                    ) : (
-                      <div
-                        className={squareInputClass}
-                        onClick={handleEmptyCellClick({ x, y, filled })}
-                      >
-                        {value || " "}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
+                  return (
+                    <div className={squareClass} key={cellIndex}>
+                      {filled ? (
+                        <div
+                          className="square__input square__input--filled"
+                          onClick={handleEmptyCellClick({ x, y, filled })}
+                        >
+                          {value}
+                        </div>
+                      ) : (
+                        <div
+                          className={squareInputClass}
+                          onClick={handleEmptyCellClick({ x, y, filled })}
+                        >
+                          {value || " "}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
         <div>
           <button
             onClick={handleDeleteSelect}
